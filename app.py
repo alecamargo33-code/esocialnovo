@@ -26,3 +26,6 @@ status_disponiveis = sorted(df['Status Evento'].astype(str).unique())
 status_selecionados = st.sidebar.multiselect("Status do Evento", status_disponiveis, default=status_disponiveis)
 
 
+
+
+
