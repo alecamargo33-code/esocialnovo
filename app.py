@@ -42,13 +42,19 @@ st.subheader("Big Numbers")
 
 if not df_filtrado.empty:
     total_eventos = len(df_filtrado)
-    eventos_2240 = len(df_filtrado[df_filtrado['Código Evento'] == 2240])
+    eventos_concluidos = len(df_filtrado[df_filtrado['Status Evento'] == "Concluido"])
+    eventos_erros = len(df_filtrado[df_filtrado['Status Evento'] == "Inconsistencias"])
 else:
-    total_eventos = 0; eventos_2240 = 0
+    total_eventos = 0; eventos_concluidos = 0; eventos_erros = 0
 
-col1, col2 = st.columns(2)
-col1.metric("Total de eventos", f"{total_eventos:,.0f}")
-col2.metric("Eventos 2240", f"{eventos_2240:,.0f}")
+col1, col2, col3 = st.columns(3)
+col1.metric("Total de eventos", f"{total_eventos}")
+col2.metric("Eventos concluidos", f"{eventos_concluidos}")
+col3.metric(
+    label = "Eventos Inconsistentes", 
+    value = f"{eventos_erros}",
+    help = "xml com inconsistencias"
+) 
 
 st.markdown("---")
 
