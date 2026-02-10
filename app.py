@@ -41,10 +41,10 @@ st.markdown("Explore os dados do eSocial, use filtros à esquerda para refinar s
 st.subheader("Big Numbers")
 
 if not df_filtrado.empty:
-    total_eventos = len(df)
-    eventos_2240 = len(df[df['Código Evento'] == 2240])
+    total_eventos = len(df_filtrado)
+    eventos_2240 = len(df_filtrado[df_filtrado['Código Evento'] == 2240])
 else:
-    total_eventos = 0, eventos_2240 = 0
+    total_eventos = 0; eventos_2240 = 0
 
 col1, col2 = st.columns(2)
 col1.metric("Total de eventos", f"{total_eventos:,.0f}")
