@@ -81,7 +81,7 @@ with col_graf1:
             title = "Eventos por Ano",
             labels = {'total': 'Qtd de eventos','Ano':'ano'}
         )
-        grafico_eventos.update_xaxes(type='cateory')
+        grafico_eventos.update_xaxes(type='category')
         st.plotly_chart(grafico_eventos,use_container_width=True)
     else:
         st.warning("Opa erro")
