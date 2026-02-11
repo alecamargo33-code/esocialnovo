@@ -1,5 +1,6 @@
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import streamlit as st
 
 df = pd.read_parquet("https://raw.githubusercontent.com/alecamargo33-code/esocialnovo/refs/heads/master/eventos_esocial.parquet")
@@ -70,20 +71,32 @@ with col_graf1:
         df_filtrado = df[df["Código Evento"].isin(eventos_de_interesse)]
 
         df_contagem = df_filtrado.groupby(['Ano', 'Código Evento']).size().reset_index(name='total')
-        df_pivot = df_contagem.pivot(index='Ano',columns='Código Evento',values='total').fillna(0)
+        df_contagem = df_contagem.sort_values(by='Ano')
 
-        grafico_eventos = px.line(
-            df_pivot,
-            x = 'Ano',
-            y = 'total',
-            color = 'Código Evento',
-            markers = True,
-            line_group = 'Código Evento',
-            title = "Eventos por Ano",
-            labels = {'value': 'Qtd de eventos','Ano':'ano','evento':'Código Evento'}
-        )
-        grafico_eventos.update_xaxes(type='category')
-        st.plotly_chart(grafico_eventos,use_container_width=True)
+        grafico_eventos = go.Figure()
+        for evento in df_contagem['Código Evento'].unique():
+            df_evento = df_contagem[df_contagem['Código Evento'] == evento]
+            grafico_eventos.add_trace(
+                go.Scatter(
+                    x=df_evento['Ano'],
+                    y=df_evento['total'],
+                    mode='line+markers',
+                    name=f"Evento {evento}",
+                    hovertemplate="<b>Evento %{fullData.name}</b><br>Ano:{x}<br>Qtd: %{y}<extra></extra>",
+                    line=dict(width=3),
+                    marker=dict(size=8),
+                    connectgaps=True
+                )
+            )
+            grafico_eventos.update_layout(
+                hovermode="x unified", # Mostra todos os eventos juntos ao passar o mouse
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                    margin=dict(l=0, r=0, t=30, b=0),
+                    xaxis=dict(type='category'), # Força o eixo X a ser categórico
+                    yaxis=dict(rangemode="tozero") # Garante que o gráfico comece do zero
+            )
+            st.plotly_chart(grafico_eventos, use_container_width=True)
+      
     else:
         st.warning("Opa erro")
 
