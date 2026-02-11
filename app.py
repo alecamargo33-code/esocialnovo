@@ -66,6 +66,7 @@ col_graf1, col_graf2 = st.columns(2)
 
 with col_graf1:
     eventos_de_interesse = ['2220','2240','2221','2210']
+    df["Código Evento"] = df["Código Evento"].astype(str).str.strip()
     df_filtrado = df[df["Código Evento"].isin(eventos_de_interesse)]
     
     if not df_filtrado.empty:
