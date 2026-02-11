@@ -70,18 +70,17 @@ with col_graf1:
         df_filtrado = df[df["Código Evento"].isin(eventos_de_interesse)]
 
         df_contagem = df_filtrado.groupby(['Ano', 'Código Evento']).size().reset_index(name='total')
-        df_contagem['Ano'] = df_contagem['Ano'].astype(str)
-        df_contagem = df_contagem.sort_values(by='Ano')
+        df_pivot = df_contagem.pivot(index='Ano',columns='Código Evento',values='total').fillna(0)
 
         grafico_eventos = px.line(
-            df_contagem,
+            df_pivot,
             x = 'Ano',
             y = 'total',
             color = 'Código Evento',
             markers = True,
             line_group = 'Código Evento',
             title = "Eventos por Ano",
-            labels = {'total': 'Qtd de eventos','Ano':'ano'}
+            labels = {'value': 'Qtd de eventos','Ano':'ano','evento':'Código Evento'}
         )
         grafico_eventos.update_xaxes(type='category')
         st.plotly_chart(grafico_eventos,use_container_width=True)
