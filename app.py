@@ -70,6 +70,7 @@ with col_graf1:
         df_filtrado = df[df["Código Evento"].isin(eventos_de_interesse)]
 
         df_contagem = df_filtrado.groupby(['Ano', 'Código Evento']).size().reset_index(name='total')
+        df_contagem['Ano'] = df_contagem['Ano'].astype(str)
 
         grafico_eventos = px.line(
             df_contagem,
@@ -77,8 +78,10 @@ with col_graf1:
             y = 'total',
             color = 'Código Evento',
             markers = True,
+            title = "Eventos por Ano",
             labels = {'total': 'Qtd de eventos','Ano':'ano'}
         )
+        grafico_eventos.update_xaxes(type='cateory')
         st.plotly_chart(grafico_eventos,use_container_width=True)
     else:
         st.warning("Opa erro")
