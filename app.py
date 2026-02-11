@@ -58,6 +58,32 @@ col3.metric(
 
 st.markdown("---")
 
+# --- Análise visuais ---
+st.subheader("Gráfios")
+
+col_graf1, col_graf2 = st.columns(2)
+
+with col_graf1:
+    if not df_filtrado.empty:
+        st.markdown("Evolução dos eventos")
+        eventos_de_interesse = ['2220','2240','2221','2210']
+        df_filtrado = df[df["Código Evento"].isin(eventos_de_interesse)]
+
+        df_contagem = df_filtrado.groupby(['Ano', 'Código Evento']).size().reset_index(name='total')
+
+        grafico_eventos = px.line(
+            df_contagem,
+            x = 'Ano',
+            y = 'total',
+            color = 'Código Evento',
+            markers = True,
+            labels = {'total': 'Qtd de eventos','Ano':'ano'}
+        )
+        st.plotly_chart(grafico_eventos,use_container_width=True)
+    else:
+        st.warning("Opa erro")
+
+
 
 
 
