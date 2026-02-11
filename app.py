@@ -65,11 +65,12 @@ st.subheader("Gráfios")
 col_graf1, col_graf2 = st.columns(2)
 
 with col_graf1:
+    eventos_de_interesse = ['2220','2240','2221','2210']
+    df_filtrado = df[df["Código Evento"].isin(eventos_de_interesse)]
+    
     if not df_filtrado.empty:
         st.markdown("Evolução dos eventos")
-        eventos_de_interesse = ['2220','2240','2221','2210']
-        df_filtrado = df[df["Código Evento"].isin(eventos_de_interesse)]
-
+        
         df_contagem = df_filtrado.groupby(['Ano', 'Código Evento']).size().reset_index(name='total')
         df_contagem = df_contagem.sort_values(by='Ano')
 
@@ -80,7 +81,7 @@ with col_graf1:
                 go.Scatter(
                     x=df_evento['Ano'],
                     y=df_evento['total'],
-                    mode='line+markers',
+                    mode='lines+markers',
                     name=f"Evento {evento}",
                     hovertemplate="<b>Evento %{fullData.name}</b><br>Ano:{x}<br>Qtd: %{y}<extra></extra>",
                     line=dict(width=3),
@@ -88,14 +89,15 @@ with col_graf1:
                     connectgaps=True
                 )
             )
-            grafico_eventos.update_layout(
+        
+        grafico_eventos.update_layout(
                 hovermode="x unified", # Mostra todos os eventos juntos ao passar o mouse
                     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                     margin=dict(l=0, r=0, t=30, b=0),
                     xaxis=dict(type='category'), # Força o eixo X a ser categórico
                     yaxis=dict(rangemode="tozero") # Garante que o gráfico comece do zero
             )
-            st.plotly_chart(grafico_eventos, use_container_width=True)
+        st.plotly_chart(grafico_eventos, use_container_width=True)
       
     else:
         st.warning("Opa erro")
